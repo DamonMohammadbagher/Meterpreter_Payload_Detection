@@ -47,7 +47,13 @@ namespace Meterpreter_Payload_Detection
 {
     class Program
     {
-       /// <summary>
+       ///
+       /// note : if you getting Error , run this tool with arguments like IPS or IDS
+       /// syntax : Meterpreter_Payload_Detection.exe IPS
+       /// syntax : Meterpreter_Payload_Detection.exe IDS
+       /// syntax : Meterpreter_Payload_Detection.exe blobblob
+        
+        /// <summary>
        /// Meterpreter_Payload_Detection.exe (beta version 1.0.0.1)
        /// .Net Framework 3.5
        /// guys if you have signatures here is for you ;-)
