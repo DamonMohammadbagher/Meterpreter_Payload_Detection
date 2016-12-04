@@ -69,7 +69,7 @@ namespace Meterpreter_Payload_Detection
         /// </summary>
 
         /// Special thanks from these guys Rohan Vazarkar, David Bitner
-        /// Because their codes and Signature help me to make this code for console appllication  
+        /// Because their codes and Signature help me to make this code for console application ;-)
         static string Meterpreter_Signature = @"jIubno+WoIyGjKCPjZCcmoyMoJiai4+Wmw==";
         static byte[] _Meterpreter__Bytes_signature = Convert.FromBase64String(Meterpreter_Signature);
 
