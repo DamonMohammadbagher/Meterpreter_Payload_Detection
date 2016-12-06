@@ -143,7 +143,12 @@ namespace Meterpreter_Payload_Detection
         {
             try
             {
-                /// IPS Mode [on]
+                /// Switch IPS Mode [on]
+                /// 
+                /// syntax ==> RunAs Administrator :  C:\> Meterpreter_Payload_Detection.exe IPS
+                /// 
+                /// for using this Method you should RunAs Administrator this application in Command Prompt
+                /// 
                 /// kill Threads with Startaddress = 0 only for infected Process
                 /// just for test because my c# Backdoor OR Powershell payloads by Social Engineer Toolkit SET
                 /// using Startadress 0 for their Backdoor Payload Threads .
