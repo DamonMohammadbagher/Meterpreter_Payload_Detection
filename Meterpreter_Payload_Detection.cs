@@ -57,7 +57,7 @@ namespace Meterpreter_Payload_Detection
         /// syntax : Meterpreter_Payload_Detection.exe blobblob
 
         /// <summary>
-        /// Meterpreter_Payload_Detection.exe (beta version 1.0.0.1)
+        /// Meterpreter_Payload_Detection.exe
         /// .Net Framework 3.5
         /// guys if you have signatures here is for you ;-)
         /// help me for improve this code and 
