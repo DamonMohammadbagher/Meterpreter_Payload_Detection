@@ -40,8 +40,8 @@ using System.Threading;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.1")]
-[assembly: AssemblyFileVersion("1.0.0.1")]
+[assembly: AssemblyVersion("1.0.0.2")]
+[assembly: AssemblyFileVersion("1.0.0.2")]
 
 namespace Meterpreter_Payload_Detection
 {
@@ -69,13 +69,13 @@ namespace Meterpreter_Payload_Detection
         /// </summary>
 
         /// Special thanks from these guys Rohan Vazarkar, David Bitner
-        /// Because their codes and Signature help me to make this code for console application ;-)
+        /// Because their codes and Signature help me to make this code for console appllication  
         static string Meterpreter_Signature = @"jIubno+WoIyGjKCPjZCcmoyMoJiai4+Wmw==";
         static byte[] _Meterpreter__Bytes_signature = Convert.FromBase64String(Meterpreter_Signature);
 
-        ///
-        /// 
+        /// <summary>
         /// make events for changing files you can use this code for Monitoring Files realtime
+        /// </summary>
         //public static System.IO.FileSystemWatcher fileSystemWatcher_1 = new System.IO.FileSystemWatcher();
         //static void fileSystemWatcher_1_Changed(object sender, System.IO.FileSystemEventArgs e)
         //{
@@ -87,9 +87,9 @@ namespace Meterpreter_Payload_Detection
         //}
         //static void fileSystemWatcher_1_Deleted(object sender, System.IO.FileSystemEventArgs e)
         //{
-
         //}
-        /// make events for changing files you can use this code for Monitoring Files realtime 
+       
+
 
         /// Realtime Monitor for "Started New Process" event
         /// publick static Temp_PID
@@ -112,10 +112,7 @@ namespace Meterpreter_Payload_Detection
             Temp_New_Process_Pid = NewProcess_PID;
 
         }
-        /// Realtime Monitor for "Started New Process" event
-        /// 
-        ///
-
+       
 
         /// Realtime Monitor for "Closed-killed Process"" event
         public static Int32 Temp_Closed_Process_Pid = 0;
@@ -135,42 +132,93 @@ namespace Meterpreter_Payload_Detection
             /// Return PID for closed Process
             Temp_Closed_Process_Pid = ClosedProcess_PID;
         }
-        /// Realtime Monitor for "Closed-killed Process"" event
-        ///
-        ///
+              
 
-
-        /// Meterpreter_Payload_Detection Code here with Core_Thread        
-        /// Meterpreter_Payload_Detection Code here with Core_Thread
+        /// killing threads IPS Mode [on]
+        [System.Runtime.InteropServices.DllImport("kernel32.dll")]
+        static extern IntPtr OpenThread(uint dwDesiredAccess, bool bInheritHandle, uint dwThreadId);
+        [System.Runtime.InteropServices.DllImport("kernel32.dll")]
+        static extern bool TerminateThread(IntPtr hThread, uint dwExitCode);
+        public static bool Kill_Thread( int Process_ID )
+        {
+            try
+            {
+                /// IPS Mode [on]
+                /// kill Threads with Startaddress = 0 only for infected Process
+                /// just for test because my c# Backdoor OR Powershell payloads by Social Engineer Toolkit SET
+                /// using Startadress 0 for their Backdoor Payload Threads .
+                /// but we need better method for Detecting Infected Threads in Process 
+                /// i hope someone have Idea about this , and help me for fix this ;)
+                ProcessThreadCollection processThreads = Process.GetProcessById(Process_ID).Threads;
+                foreach (ProcessThread pt in processThreads)
+                {
+                    IntPtr Target_Thread_for_kill = OpenThread(1, false, (uint)pt.Id);
+                    if (pt.StartAddress.ToString() == "0")
+                    {
+                        TerminateThread(Target_Thread_for_kill, 1);
+                        return true;
+                    }
+                }
+            }
+            catch (Exception err)
+            {
+                Console.WriteLine("Thread Killing Error : " ,err.Message);
+                return false;
+            }
+            
+            return false;
+          
+        }
+                        
+        
+        /// Meterpreter_Payload_Detection Code here with Core_Thread                
         public static Thread Core_Thread;
         public static string[] _myrgs;
         static Process[] myProcess;
+        static bool Is_IPS_Mode = false;        
         public static void Core_Method()
         {
-            string[] args = _myrgs;
+            string[] args = new string[_myrgs.Length];
+            args = _myrgs;
             while (true)
             {
+               // Is_IPS_Mode = true;
                 string IPD_IDS = " ";
                 try
                 {
-                    if (args[0].ToUpper() == "IPS")
+                    try
                     {
-                        IPD_IDS = "IPS Mode [ON]";
-                        /// do IPS Mode
+                        /// fixing ERROR for Arguments ;-) Done
+                        if (args[0].ToUpper() == "IPS")
+                        {
+                            IPD_IDS = "IPS Mode [ON]";
+                            /// do IPS Mode
+                            Is_IPS_Mode = true;
+                        }
+                        else
+                        {
+                            IPD_IDS = "IDS Mode only";
+                            /// do default Mode
+                            Is_IPS_Mode = false;
+                        }
+                        /// fixing ERROR for Arguments ;-) Done
                     }
-                    else
+                    catch (Exception)
                     {
                         IPD_IDS = "IDS Mode only";
                         /// do default Mode
+                        Is_IPS_Mode = false;
+                       // Is_IPS_Mode = true;
                     }
 
+                   
 
                     Console.ForegroundColor = ConsoleColor.Gray;
                     Console.WriteLine("");
                     Console.WriteLine(@"[#] Meterpreter Payload Detection");
-                    Console.WriteLine(@"[#] Beta Version: {0}", Assembly.GetEntryAssembly().GetName().Version.ToString());
+                    Console.WriteLine(@"[#] IDS Version: {0}", Assembly.GetEntryAssembly().GetName().Version.ToString());
                     Console.WriteLine(@"[#] Console version Published by Damon Mohammadbagher");
-                    Console.WriteLine(@"[#] Orginal code by Rohan Vazarkar, David Bitner");
+                    Console.WriteLine(@"[#] API code and Meterpreter Signature by Rohan Vazarkar, David Bitner");
                     Console.WriteLine(@"[#] {0} Started time ", System.DateTime.Now.ToString());
 
                     if (IPD_IDS == "IPS Mode [ON]") { Console.ForegroundColor = ConsoleColor.Yellow; }
@@ -202,6 +250,19 @@ namespace Meterpreter_Payload_Detection
                                 Console.WriteLine("\t Infected Process should be killed : {0}", P_item.ProcessName);
                                 Console.ForegroundColor = ConsoleColor.Yellow;
                                 Console.WriteLine("\t Infected Process path : {0}", P_item.MainModule.FileName);
+                                                                
+                                //Process find_alive = Process.GetProcessById(P_item.Id);
+                                //if (find_alive == null)
+                                //{
+                                //    Console.ForegroundColor = ConsoleColor.Green;
+                                //    Console.WriteLine("\t Infected Process Status: has Exited - not Found");
+
+                                //}
+                                //else
+                                //{
+                                //    Console.ForegroundColor = ConsoleColor.Green;
+                                //    Console.WriteLine("\t Infected Process Status: is Alive"); }                                       
+
                             }
                             catch (Exception)
                             {
@@ -252,8 +313,7 @@ namespace Meterpreter_Payload_Detection
 
             }
         }
-        /// Meterpreter_Payload_Detection Code here with Core_Thread
-        /// Meterpreter_Payload_Detection Code here with Core_Thread
+
 
         static void Main(string[] args)
         {
@@ -265,13 +325,18 @@ namespace Meterpreter_Payload_Detection
                 //fileSystemWatcher_1.Deleted += new System.IO.FileSystemEventHandler(fileSystemWatcher_1_Deleted);
                 /// make events for changing files you can use this code for Monitoring Files realtime ;)
 
+                
                 /// make thread for faster performance but i think i should change this code ;)
-                _myrgs = args;
+                _myrgs = args;                
                 Core_Thread = new Thread(Core_Method);
                 Core_Thread.Start();
                 ///make thread for faster performance but i think i should change this code ;)
 
-                Monitor_New_Process();
+                
+                
+                
+                /// in future monitor new process event too , i will make code for this event by next version
+                /// Monitor_New_Process();
             }
             catch (Exception ee)
             {
@@ -355,14 +420,16 @@ namespace Meterpreter_Payload_Detection
                                             Console.WriteLine(" ");
                                             Console.WriteLine("\t Process Arguments :");
                                             string temp = _Get_Arguments(Prcs);
-                                            string temp2 = temp.Remove(300);
-                                            Console.WriteLine("\t {0}", temp2.Substring(0, 60));
-                                            Console.WriteLine("\t {0}", temp2.Substring(61, 60));
-                                            Console.WriteLine("\t {0}", temp2.Substring(121, 60));
-                                            Console.WriteLine("\t {0}", temp2.Substring(181, 60));
-                                            Console.WriteLine("\t {0}", temp2.Substring(241, 59));
-                                            Console.WriteLine("\t ");
-
+                                            /// fixing Arguments show method done ;)
+                                            /// show 300 char arguments only
+                                            int chunkSize = 60;
+                                            int stringLength = temp.Length;
+                                            for (int b = 0; b < stringLength; b += chunkSize)
+                                            {
+                                                if (b + chunkSize > stringLength) chunkSize = stringLength - b;
+                                                Console.WriteLine("\t {0}", temp.Substring(b, chunkSize));
+                                                if (b >= 300) break;
+                                            }
                                         }
                                         catch (Exception _eee)
                                         {
@@ -379,6 +446,30 @@ namespace Meterpreter_Payload_Detection
                                     {
                                         Console.ForegroundColor = ConsoleColor.DarkYellow;
                                         Console.WriteLine("\t\t    Tid StartAddress: {0}", Convert.ToString(Sub_Threads));
+                                        
+                                        /// killing Infected Thread in IPS Mode
+                                        if (Is_IPS_Mode)
+                                        {
+                                            try
+                                            {
+                                                /// warning this code is Dangerous maybe you killing wrong process with StartAdress "0"                                             
+                                                bool Kill_TID = Kill_Thread(Prcs.Id);
+                                                if (Kill_TID)
+                                                {
+                                                    Console.ForegroundColor = ConsoleColor.Yellow;
+                                                    Console.WriteLine("\t\t Process Threads ID: {0} with StartAddress: {1} Killed", Prcs.Threads[ii].Id, Convert.ToString(Sub_Threads));
+                                                }
+
+                                            }
+                                            catch (Exception errorrr)
+                                            {
+                                                Console.ForegroundColor = ConsoleColor.Yellow;
+                                                Console.WriteLine("Maybe Thread can't kill: " + errorrr.Message);
+
+                                            }
+
+                                        }
+
                                     }
                                     else
                                     {
