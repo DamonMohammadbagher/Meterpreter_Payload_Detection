@@ -1,0 +1,22 @@
+Next versions :
+i want to add functions for making Dump files for Infected process and making text report files
+and this tool need to monitor Realtime for New process and Closed Process too , i will make these functions very soon
+and finally i want to add Network Monitor for this tool with API ;)
+i have idea about make service for this tool with IPS Mode [on] in future.
+
+Test:
+i tested this tool by my own Encrypted Backdoor "C#" and Metasploit and Powershell Backdoors by SET tool
+Armitage not tested , i think you can detect Armitage backdoors with this tool.
+cobaltstrike not tested .
+Empire Not detected Unfortunately ;) maybe fortunately , because emipre native payloads was different with signature in this tool.  
+
+-------------------
+version 1.0.0.3
+1.Adding Debug Mode [on] : Showing Hex for infected Process memory (by default)
+  
+version 1.0.0.2
+1.Adding IPS Mode [on] Switch , using "TerminateThread" function for Killing Infected Thread for Infected Process 
+with Startaddress ="0" , this code should be change in future because this code always killing Threads
+with Startaddress = 0  only
+Note : Powershell payloads by Social Engineer Toolkit SET always use Startaddress 0 for their Backdoor Threads
+RunAs Administrator :  C:\> Meterpreter_Payload_Detection.exe IPS
