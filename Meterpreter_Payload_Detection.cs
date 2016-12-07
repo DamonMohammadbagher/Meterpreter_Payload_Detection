@@ -40,8 +40,8 @@ using System.Threading;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.2")]
-[assembly: AssemblyFileVersion("1.0.0.2")]
+[assembly: AssemblyVersion("1.0.0.3")]
+[assembly: AssemblyFileVersion("1.0.0.3")]
 
 namespace Meterpreter_Payload_Detection
 {
@@ -246,6 +246,7 @@ namespace Meterpreter_Payload_Detection
                         System.Threading.Thread.Sleep(1);
                         bool find = Scan_Process_Memory(P_item);
                         System.Threading.Thread.Sleep(1);
+                        
                         if (find)
                         {                            
                             try
@@ -254,19 +255,7 @@ namespace Meterpreter_Payload_Detection
                                 Console.ForegroundColor = ConsoleColor.DarkYellow;
                                 Console.WriteLine("\t Infected Process should be killed : {0}", P_item.ProcessName);
                                 Console.ForegroundColor = ConsoleColor.Yellow;
-                                Console.WriteLine("\t Infected Process path : {0}", P_item.MainModule.FileName);
-                                                                
-                                //Process find_alive = Process.GetProcessById(P_item.Id);
-                                //if (find_alive == null)
-                                //{
-                                //    Console.ForegroundColor = ConsoleColor.Green;
-                                //    Console.WriteLine("\t Infected Process Status: has Exited - not Found");
-
-                                //}
-                                //else
-                                //{
-                                //    Console.ForegroundColor = ConsoleColor.Green;
-                                //    Console.WriteLine("\t Infected Process Status: is Alive"); }                                       
+                                Console.WriteLine("\t Infected Process path : {0}", P_item.MainModule.FileName);                                                                                                                              
 
                             }
                             catch (Exception)
@@ -398,7 +387,7 @@ namespace Meterpreter_Payload_Detection
                             {
                                 buff[j] = (byte)(buff[j] ^ 0xFF);
                             }
-
+                            
                             long Result = IndexOf(buff, _Meterpreter__Bytes_signature);
 
                             if (Result > 0)
@@ -419,15 +408,38 @@ namespace Meterpreter_Payload_Detection
                                             Console.WriteLine("\t Process BaseAddress : {0}", Prcs.MainModule.BaseAddress.ToInt64().ToString());
                                             Console.WriteLine("\t Process EntryPointAddress : {0}", Prcs.MainModule.EntryPointAddress.ToInt64().ToString());
                                             Console.WriteLine("\t Infected Process: {0} : {1}", Prcs.ProcessName, Prcs.Id.ToString());
-
+                                           
                                             Console.ForegroundColor = ConsoleColor.Red;
-
+                                            
+                                            /// Debug mode [on]
+                                            /// you can use Switch 'Debug' for this code but i want to show this by default 
+                                            /// view Hex for Infected memory          
+                                            string source = BitConverter.ToString(buff);
+                                            string pattern = BitConverter.ToString(_Meterpreter__Bytes_signature);
+                                            int _index = source.IndexOf(pattern);
+                                            Console.WriteLine("");
+                                            Console.WriteLine("\t Infected Memory bytes :");
+                                            int chunkSize_debug = 60;
+                                            string temp_debug = BitConverter.ToString(buff);
+                                            int stringLength_debug = temp_debug.Length;
+                                            int counter_debug = 0;
+                                            for (int d = _index; d < stringLength_debug;d += chunkSize_debug)
+                                            {
+                                                if (d + chunkSize_debug > stringLength_debug) chunkSize_debug = stringLength_debug - d;
+                                                Console.WriteLine("\t {0}", temp_debug.Substring(d, chunkSize_debug));
+                                                if (counter_debug >= 4) break;
+                                                counter_debug++;
+                                            }
+                                           
+                                            
+                                            
+                                            Console.ForegroundColor = ConsoleColor.Red;
                                             Console.WriteLine(" ");
                                             Console.WriteLine("\t Process Arguments :");
                                             string temp = _Get_Arguments(Prcs);
                                             /// fixing Arguments show method done ;)
                                             /// show 300 char arguments only
-                                            int chunkSize = 60;
+                                            int chunkSize = 59;
                                             int stringLength = temp.Length;
                                             for (int b = 0; b < stringLength; b += chunkSize)
                                             {
@@ -438,6 +450,7 @@ namespace Meterpreter_Payload_Detection
                                         }
                                         catch (Exception _eee)
                                         {
+                                            Console.WriteLine(_eee.Message);
                                             // nothing
                                         }
 
