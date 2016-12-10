@@ -13,6 +13,7 @@ Empire Not detected Unfortunately ;) maybe fortunately , because emipre native p
 -------------------
 version 1.0.0.4
 1.Addming "New Process Event" for Monitoring like Realtime Mode
+2.you should runAs Administrator this version because Method for Monitoring Realtime Process need to Administrator Privilege 
 
 version 1.0.0.3
 1.Adding Debug Mode [on] : Showing Hex for infected Process memory (by default)
