@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Reflection;
 using System.Threading;
 
+
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
@@ -40,8 +41,8 @@ using System.Threading;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.3")]
-[assembly: AssemblyFileVersion("1.0.0.3")]
+[assembly: AssemblyVersion("1.0.0.4")]
+[assembly: AssemblyFileVersion("1.0.0.4")]
 
 namespace Meterpreter_Payload_Detection
 {
@@ -69,71 +70,10 @@ namespace Meterpreter_Payload_Detection
         /// </summary>
 
         /// Special thanks from these guys Rohan Vazarkar, David Bitner
-        /// Because their codes and Signature help me to make this code for console appllication  
+        /// Because their codes and Signature help me to make this code for console application  
         static string Meterpreter_Signature = @"jIubno+WoIyGjKCPjZCcmoyMoJiai4+Wmw==";
         static byte[] _Meterpreter__Bytes_signature = Convert.FromBase64String(Meterpreter_Signature);
-
-        /// <summary>
-        /// make events for changing files you can use this code for Monitoring Files realtime
-        /// </summary>
-        //public static System.IO.FileSystemWatcher fileSystemWatcher_1 = new System.IO.FileSystemWatcher();
-        //static void fileSystemWatcher_1_Changed(object sender, System.IO.FileSystemEventArgs e)
-        //{
-        //    //throw new NotImplementedException();           
-        //}
-        //static void fileSystemWatcher_1_Created(object sender, System.IO.FileSystemEventArgs e)
-        //{
-        //   // throw new NotImplementedException();
-        //}
-        //static void fileSystemWatcher_1_Deleted(object sender, System.IO.FileSystemEventArgs e)
-        //{
-        //}
-       
-
-
-        /// Realtime Monitor for "Started New Process" event
-        /// publick static Temp_PID
-        public static Int32 Temp_New_Process_Pid = 0;
-        static string NewProcess_Name;
-        static Int32 NewProcess_PID = 0;
-        public static void Monitor_New_Process()
-        {
-            ManagementEventWatcher startWatch = new ManagementEventWatcher(new WqlEventQuery("SELECT * FROM Win32_ProcessStartTrace"));
-            startWatch.EventArrived += new EventArrivedEventHandler(startWatch_EventArrived);
-
-        }
-        static void startWatch_EventArrived(object sender, EventArrivedEventArgs e)
-        {
-            Temp_New_Process_Pid = 0;
-            NewProcess_PID = 0;
-            NewProcess_PID = Convert.ToInt32(e.NewEvent.Properties["ProcessID"].Value.ToString());
-            NewProcess_Name = e.NewEvent.Properties["ProcessName"].Value.ToString();
-            /// Return PID for New Process
-            Temp_New_Process_Pid = NewProcess_PID;
-
-        }
-       
-
-        /// Realtime Monitor for "Closed-killed Process"" event
-        public static Int32 Temp_Closed_Process_Pid = 0;
-        static string ClosedProcess_Name;
-        static Int32 ClosedProcess_PID = 0;
-        public static void Monitor_Closed_Process()
-        {
-            ManagementEventWatcher stopWatch = new ManagementEventWatcher(new WqlEventQuery("SELECT * FROM Win32_ProcessStopTrace"));
-            stopWatch.EventArrived += new EventArrivedEventHandler(stopWatch_EventArrived);
-        }
-        static void stopWatch_EventArrived(object sender, EventArrivedEventArgs e)
-        {
-            Temp_Closed_Process_Pid = 0;
-            ClosedProcess_PID = 0;
-            ClosedProcess_PID = Convert.ToInt32(e.NewEvent.Properties["ProcessID"].Value.ToString());
-            ClosedProcess_Name = e.NewEvent.Properties["ProcessName"].Value.ToString();
-            /// Return PID for closed Process
-            Temp_Closed_Process_Pid = ClosedProcess_PID;
-        }
-              
-
+                  
         /// killing threads IPS Mode [on]
         [System.Runtime.InteropServices.DllImport("kernel32.dll")]
         static extern IntPtr OpenThread(uint dwDesiredAccess, bool bInheritHandle, uint dwThreadId);
@@ -157,9 +97,10 @@ namespace Meterpreter_Payload_Detection
                 ProcessThreadCollection processThreads = Process.GetProcessById(Process_ID).Threads;
                 foreach (ProcessThread pt in processThreads)
                 {
+                    
                     IntPtr Target_Thread_for_kill = OpenThread(1, false, (uint)pt.Id);
                     if (pt.StartAddress.ToString() == "0")
-                    {
+                    {                        
                         TerminateThread(Target_Thread_for_kill, 1);
                         return true;
                     }
@@ -167,6 +108,7 @@ namespace Meterpreter_Payload_Detection
             }
             catch (Exception err)
             {
+              
                 Console.WriteLine("Thread Killing Error : " ,err.Message);
                 return false;
             }
@@ -174,8 +116,118 @@ namespace Meterpreter_Payload_Detection
             return false;
           
         }
-                        
+
         
+        /// Core_Method_For_NewProcess Code here with Core_Thread_for_NewProcess         
+        public static Int32 Temp_New_Process_Pid = 0;
+        static string NewProcess_Name;
+        static Int32 NewProcess_PID = 0;
+        public static Thread Core_Thread_for_NewProcess;
+        public static EventArrivedEventArgs _e_Temp;
+        public static void Core_Method_For_NewProcess()
+        {
+            try
+            {
+                bool find = false;
+                Temp_New_Process_Pid = 0;
+                NewProcess_PID = 0;
+                NewProcess_PID = Convert.ToInt32(_e_Temp.NewEvent.Properties["ProcessID"].Value.ToString());
+                NewProcess_Name = _e_Temp.NewEvent.Properties["ProcessName"].Value.ToString();
+                /// Return PID for New Process
+                Temp_New_Process_Pid = NewProcess_PID;
+               
+                Process N_Prcs = Process.GetProcessById(NewProcess_PID);
+                try
+                {
+                   
+                    /// you need time for complete loading process in memory : (5000 ... 150000)
+                    /// this time was good before scanning new Process in memory 
+                    System.Threading.Thread.Sleep(5000);                  
+                    
+                    find = Scan_Process_Memory(N_Prcs);                    
+
+                    if (find)
+                    {
+                        try
+                        {
+                            System.Threading.Thread.Sleep(1);
+                            Console.ForegroundColor = ConsoleColor.DarkYellow;
+                            Console.WriteLine("\t Infected Process should be killed : {0}", N_Prcs.ProcessName);
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            Console.WriteLine("\t Infected Process path : {0}", N_Prcs.MainModule.FileName);
+
+                        }
+                        catch (Exception error)
+                        {
+                            Console.WriteLine("\t ops: " + error.Message);
+                            // break;
+                        }
+                    }
+                    else
+                    {
+                       
+                        System.Threading.Thread.Sleep(1);
+                        Console.ForegroundColor = ConsoleColor.DarkGreen;
+                        try
+                        {
+                            Process _p_alive = Process.GetProcessById(N_Prcs.Id);
+                            if (_p_alive != null)
+                            {
+
+                                Console.ForegroundColor = ConsoleColor.Gray;
+                                System.Threading.Thread.Sleep(5);
+                                Console.WriteLine(" {0} : {2} {1}  is OK", System.DateTime.Now.TimeOfDay.ToString(), N_Prcs.ProcessName, N_Prcs.Id.ToString());
+                                System.Threading.Thread.Sleep(1);
+                                Console.ForegroundColor = ConsoleColor.DarkGreen;
+
+                            }
+                            else
+                            {
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                Console.WriteLine(" {0} : {2} {1} has Exited - not Found", System.DateTime.Now.TimeOfDay.ToString(), N_Prcs.ProcessName, N_Prcs.Id.ToString());
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.WriteLine(" {0} : {2} {1} has Exited - not Found", System.DateTime.Now.TimeOfDay.ToString(), N_Prcs.ProcessName, N_Prcs.Id.ToString());
+                        }
+                       
+                        System.Threading.Thread.Sleep(1);
+                    }
+                }
+                catch (Exception error)
+                {
+                    if (error.Message == "Process has exited, so the requested information is not available.")
+                    {
+                        Console.ForegroundColor = ConsoleColor.Green;
+                        Console.WriteLine("\tError : Process has Exited - not Found");
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.WriteLine("\t" + error.Message);
+                    }
+
+                }
+
+                Console.ForegroundColor = ConsoleColor.Gray;
+            }
+            catch (Exception error)
+            {
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("\t" + error.Message);
+
+            }
+        }
+        public static void ProcessStartEventArrived(object sender, EventArrivedEventArgs e)
+        {
+            _e_Temp = e;
+            Core_Thread_for_NewProcess = new Thread(Core_Method_For_NewProcess);
+            Core_Thread_for_NewProcess.Start();
+        }
+
+
         /// Meterpreter_Payload_Detection Code here with Core_Thread                
         public static Thread Core_Thread;
         public static string[] _myrgs;
@@ -183,166 +235,183 @@ namespace Meterpreter_Payload_Detection
         static bool Is_IPS_Mode = false;        
         public static void Core_Method()
         {
-            string[] args = new string[_myrgs.Length];
-            args = _myrgs;
-            while (true)
+            try
             {
-               // Is_IPS_Mode = true;
-                string IPD_IDS = " ";
-                try
-                {
+                string[] args = new string[_myrgs.Length];
+                args = _myrgs;
+                ManagementEventWatcher _Watcher = null;                
+                WqlEventQuery Query;
+                Query = new WqlEventQuery();
+                Query.EventClassName = "Win32_ProcessStartTrace";
+                _Watcher = new ManagementEventWatcher(Query);
+                _Watcher.EventArrived += new EventArrivedEventHandler(ProcessStartEventArrived);
+                _Watcher.Start();
+
+
+                while (true)
+                {                                           
+
+                   
+                    string IPD_IDS = " ";
                     try
                     {
-                        /// fixing ERROR for Arguments ;-) Done
-                        if (args[0].ToUpper() == "IPS")
+                        try
                         {
-                            IPD_IDS = "IPS Mode [ON]";
-                            /// do IPS Mode
-                            Is_IPS_Mode = true;
+                            /// fixing ERROR for Arguments ;-) Done
+                            if (args[0].ToUpper() == "IPS")
+                            {
+                                IPD_IDS = "IPS Mode [ON]";
+                                /// do IPS Mode
+                                Is_IPS_Mode = true;
+                            }
+                            else
+                            {
+                                IPD_IDS = "IDS Mode only";
+                                /// do default Mode
+                                Is_IPS_Mode = false;
+                            }
+                            /// fixing ERROR for Arguments ;-) Done
                         }
-                        else
+                        catch (Exception)
                         {
                             IPD_IDS = "IDS Mode only";
                             /// do default Mode
                             Is_IPS_Mode = false;
+                           
                         }
-                        /// fixing ERROR for Arguments ;-) Done
+
+
+
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        Console.WriteLine("");
+                        Console.WriteLine(@"[#] Meterpreter Payload Detection");
+                        Console.WriteLine(@"[#] IDS Version: {0}", Assembly.GetEntryAssembly().GetName().Version.ToString());
+                        Console.WriteLine(@"[#] Console version Published by Damon Mohammadbagher");
+                        Console.WriteLine(@"[#] API code and Meterpreter Signature by Rohan Vazarkar, David Bitner");
+                        Console.WriteLine(@"[#] {0} Started time ", System.DateTime.Now.ToString());
+
+                        if (IPD_IDS == "IPS Mode [ON]") { Console.ForegroundColor = ConsoleColor.Yellow; }
+                        Console.WriteLine("[#] {0}", IPD_IDS);
+                        Console.WriteLine("");
+                        Console.ForegroundColor = ConsoleColor.Gray;
+                        myProcess = Process.GetProcesses();
+                        Console.WriteLine("Scanning {0} process  ", myProcess.Length);
+                        Console.ForegroundColor = ConsoleColor.Gray;
                     }
                     catch (Exception)
                     {
-                        IPD_IDS = "IDS Mode only";
-                        /// do default Mode
-                        Is_IPS_Mode = false;
-                       // Is_IPS_Mode = true;
+                        IPD_IDS = " ";
                     }
-
-                   
-
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    Console.WriteLine("");
-                    Console.WriteLine(@"[#] Meterpreter Payload Detection");
-                    Console.WriteLine(@"[#] IDS Version: {0}", Assembly.GetEntryAssembly().GetName().Version.ToString());
-                    Console.WriteLine(@"[#] Console version Published by Damon Mohammadbagher");
-                    Console.WriteLine(@"[#] API code and Meterpreter Signature by Rohan Vazarkar, David Bitner");
-                    Console.WriteLine(@"[#] {0} Started time ", System.DateTime.Now.ToString());
-
-                    if (IPD_IDS == "IPS Mode [ON]") { Console.ForegroundColor = ConsoleColor.Yellow; }
-                    Console.WriteLine("[#] {0}", IPD_IDS);
-                    Console.WriteLine("");
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    myProcess = Process.GetProcesses();
-                    Console.WriteLine("Scanning {0} process  ", myProcess.Length);
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                }
-                catch (Exception)
-                {
-                    IPD_IDS = " ";
-                }
-                foreach (Process P_item in myProcess)
-                {
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    try
+                    foreach (Process P_item in myProcess)
                     {
-                        System.Threading.Thread.Sleep(1);
-                        bool find = Scan_Process_Memory(P_item);
-                        System.Threading.Thread.Sleep(1);
-                        
-                        if (find)
-                        {                            
-                            try
-                            {
-                                System.Threading.Thread.Sleep(1);
-                                Console.ForegroundColor = ConsoleColor.DarkYellow;
-                                Console.WriteLine("\t Infected Process should be killed : {0}", P_item.ProcessName);
-                                Console.ForegroundColor = ConsoleColor.Yellow;
-                                Console.WriteLine("\t Infected Process path : {0}", P_item.MainModule.FileName);                                                                                                                              
 
-                            }
-                            catch (Exception)
-                            {
-                                // break;
-                            }
-                        }
-                        else
-                        {                           
-                            Console.ForegroundColor = ConsoleColor.Gray;                            
+                       
+                        try
+                        {
                             System.Threading.Thread.Sleep(1);
-                            Console.ForegroundColor = ConsoleColor.DarkGreen;
-                            try
-                            {
-                                Process _p_alive = Process.GetProcessById(P_item.Id);
-                                if (_p_alive != null)
-                                {
+                            bool find = Scan_Process_Memory(P_item);
+                            System.Threading.Thread.Sleep(1);
 
-                                    Console.ForegroundColor = ConsoleColor.DarkGreen;
-                                    Console.WriteLine(" {0} : {1} {2} is OK", System.DateTime.Now.TimeOfDay.ToString(), P_item.ProcessName, P_item.Id.ToString());
+                            if (find)
+                            {
+                                try
+                                {
+                                    System.Threading.Thread.Sleep(1);
+                                    Console.ForegroundColor = ConsoleColor.DarkYellow;
+                                    Console.WriteLine("\t Infected Process should be killed : {0}", P_item.ProcessName);
+                                    Console.ForegroundColor = ConsoleColor.Yellow;
+                                    Console.WriteLine("\t Infected Process path : {0}", P_item.MainModule.FileName);
+
                                 }
-                                else
+                                catch (Exception)
+                                {
+                                    // break;
+                                }
+                            }
+                            else
+                            {
+                                                       
+                                System.Threading.Thread.Sleep(1);
+                                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                                try
+                                {
+                                    Process _p_alive = Process.GetProcessById(P_item.Id);
+                                    if (_p_alive != null)
+                                    {
+
+                                        Console.ForegroundColor = ConsoleColor.DarkGreen;
+                                        Console.WriteLine(" {0} : {2} {1}  is OK", System.DateTime.Now.TimeOfDay.ToString(), P_item.ProcessName, P_item.Id.ToString());
+                                        System.Threading.Thread.Sleep(1);
+                                        
+                                    }
+                                    else
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.Green;
+                                        Console.WriteLine(" {0} : {2} {1} has Exited - not Found", System.DateTime.Now.TimeOfDay.ToString(), P_item.ProcessName, P_item.Id.ToString());
+                                    }
+                                }
+                                catch (Exception)
                                 {
                                     Console.ForegroundColor = ConsoleColor.Green;
-                                    Console.WriteLine(" {0} : {1} {2} has Exited - not Found", System.DateTime.Now.TimeOfDay.ToString(), P_item.ProcessName, P_item.Id.ToString());
+                                    Console.WriteLine(" {0} : {2} {1} has Exited - not Found", System.DateTime.Now.TimeOfDay.ToString(), P_item.ProcessName, P_item.Id.ToString());
                                 }
+                               
+                                System.Threading.Thread.Sleep(1);
                             }
-                            catch (Exception)
-                            {
-                                Console.ForegroundColor = ConsoleColor.Green;
-                                Console.WriteLine(" {0} : {1} {2} has Exited - not Found", System.DateTime.Now.TimeOfDay.ToString(), P_item.ProcessName, P_item.Id.ToString());
-                            }                            
-                            Console.ForegroundColor = ConsoleColor.Gray;
-                            System.Threading.Thread.Sleep(1);
                         }
+                        catch (Exception error)
+                        {
+                            Console.WriteLine(" Error CoreThread : " + error.Message);
+
+                        }
+
+                       
                     }
-                    catch (Exception error)
-                    {
-                        Console.WriteLine("error main : " + error.Message);
+                     Console.ForegroundColor = ConsoleColor.Gray;
+                    /// wait every 1 min ;-)               
+                    System.Threading.Thread.Sleep(60000);
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
 
-
-                    }
-
-                    Console.ForegroundColor = ConsoleColor.Gray;
                 }
-                Console.ForegroundColor = ConsoleColor.Gray;
-                /// wait every 1 min ;-)
-                System.Threading.Thread.Sleep(60000);
-
             }
-        }
+            catch (Exception error)
+            {
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("\t" + error.Message);
+                
+             
+            }
+            
+        }       
 
-
+        
+        
         static void Main(string[] args)
         {
             try
-            {
-                /// make events for changing files you can use this code for Monitoring Files realtime ;)
-                //fileSystemWatcher_1.Changed += new System.IO.FileSystemEventHandler(fileSystemWatcher_1_Changed);
-                //fileSystemWatcher_1.Created += new System.IO.FileSystemEventHandler(fileSystemWatcher_1_Created);
-                //fileSystemWatcher_1.Deleted += new System.IO.FileSystemEventHandler(fileSystemWatcher_1_Deleted);
-                /// make events for changing files you can use this code for Monitoring Files realtime ;)
-
-                
+            {                                             
                 /// make thread for faster performance but i think i should change this code ;)
                 _myrgs = args;                
                 Core_Thread = new Thread(Core_Method);
                 Core_Thread.Start();
-                ///make thread for faster performance but i think i should change this code ;)
-
-                
-                
-                
-                /// in future monitor new process event too , i will make code for this event by next version
-                /// Monitor_New_Process();
+                ///make thread for faster performance but i think i should change this code ;)                                                              
+             
             }
             catch (Exception ee)
             {
-                Console.WriteLine("omfg error: " + ee.Message);
+                Console.ForegroundColor = ConsoleColor.Gray;
+                Console.WriteLine("omfg Main error: " + ee.Message);
             }
         }
+
+
 
         public static bool Scan_Process_Memory(Process Prcs)
         {
 
             byte[] buff;
-
+            Console.ForegroundColor = ConsoleColor.Red;
             try
             {
                 if (Prcs.HasExited)
@@ -376,12 +445,13 @@ namespace Meterpreter_Payload_Detection
 
                     for (int i = 0; i < MemReg.Count; i++)
                     {
+                       
 
                         if (!Prcs.HasExited)
                         {
                             buff = new byte[MemReg[i].RegionSize.ToInt64()];
                             ReadProcessMemory(Prcs.Handle, MemReg[i].BaseAddress, buff, MemReg[i].RegionSize.ToInt32(), IntPtr.Zero);
-                            Console.ForegroundColor = ConsoleColor.Gray;
+                         
 
                             for (int j = 0; j < buff.Length; j++)
                             {
@@ -395,12 +465,14 @@ namespace Meterpreter_Payload_Detection
                                 Console.ForegroundColor = ConsoleColor.Red;
                                 for (int ii = 0; ii < Prcs.Threads.Count; ii++)
                                 {
+                                    Console.ForegroundColor = ConsoleColor.Red;
                                     var Sub_Threads = Prcs.Threads[ii].StartAddress.ToInt64();
                                     /// do this code in if only 1 time in loop ii == 0
                                     if (ii <= 0)
                                     {
                                         try
                                         {
+                                            Console.ForegroundColor = ConsoleColor.Red;
                                             System.Threading.Thread.Sleep(1);
                                             Console.WriteLine(@" {0}", System.DateTime.Now.TimeOfDay.ToString());
                                             Console.WriteLine("\t");
@@ -450,7 +522,8 @@ namespace Meterpreter_Payload_Detection
                                         }
                                         catch (Exception _eee)
                                         {
-                                            Console.WriteLine(_eee.Message);
+                                         
+                                            Console.WriteLine("\t"+_eee.Message);
                                             // nothing
                                         }
 
@@ -479,10 +552,10 @@ namespace Meterpreter_Payload_Detection
                                                 }
 
                                             }
-                                            catch (Exception errorrr)
+                                            catch (Exception error)
                                             {
-                                                Console.ForegroundColor = ConsoleColor.Yellow;
-                                                Console.WriteLine("Maybe Thread can't kill: " + errorrr.Message);
+                                                
+                                                Console.WriteLine("Maybe Thread can't kill: " + error.Message);
 
                                             }
 
@@ -502,7 +575,7 @@ namespace Meterpreter_Payload_Detection
 
                                 return true;
                             }
-                            Console.ForegroundColor = ConsoleColor.Gray;
+                         
 
                             buff = null;
                         }
@@ -512,6 +585,7 @@ namespace Meterpreter_Payload_Detection
                 }
                 catch (Exception ee)
                 {
+                  
                     //Console.WriteLine(ee.Message);
                 }
 
