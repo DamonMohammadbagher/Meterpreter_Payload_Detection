@@ -11,6 +11,9 @@ cobaltstrike not tested .
 Empire Not detected Unfortunately ;) maybe fortunately , because emipre native payloads was different with signature in this tool.  
 
 -------------------
+version 1.0.0.4
+1.Addming "New Process Event" for Monitoring like Realtime Mode
+
 version 1.0.0.3
 1.Adding Debug Mode [on] : Showing Hex for infected Process memory (by default)
   
