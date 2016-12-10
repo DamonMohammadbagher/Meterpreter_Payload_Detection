@@ -378,7 +378,7 @@ namespace Meterpreter_Payload_Detection
             catch (Exception error)
             {
                 Console.ForegroundColor = ConsoleColor.Gray;
-                Console.WriteLine("\t" + error.Message);
+                Console.WriteLine("\t You should RunAs Administrator this Application : " + error.Message);                
                 
              
             }
