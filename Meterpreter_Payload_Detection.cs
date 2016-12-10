@@ -117,7 +117,7 @@ namespace Meterpreter_Payload_Detection
           
         }
 
-        
+        /// you should runAs Administrator this version because Method for Monitoring Realtime Process need to Administrator Privilege 
         /// Core_Method_For_NewProcess Code here with Core_Thread_for_NewProcess         
         public static Int32 Temp_New_Process_Pid = 0;
         static string NewProcess_Name;
