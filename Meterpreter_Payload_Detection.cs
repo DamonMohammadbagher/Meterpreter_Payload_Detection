@@ -14,7 +14,7 @@ using System.Threading;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Meterpreter_Payload_Detection")]
+[assembly: AssemblyTitle("Meterpreter_Payload_Detection by Damon Mohammadbagher")]
 [assembly: AssemblyDescription("Console version Published by Damon Mohammadbagher but Special thanks from these guys Rohan Vazarkar, David Bitner")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
