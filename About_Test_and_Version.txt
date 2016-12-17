@@ -3,7 +3,7 @@ i want to add functions for making Dump files for Infected process and making te
 and this tool need to monitor Realtime for New process and Closed Process too , i will make these functions very soon
 and finally i want to add Network Monitor for this tool with API ;)
 i have idea about make service for this tool with IPS Mode [on] in future.
-in the next version i will fix Colors problem too , i hope ;)
+in the next version i will fix Colors problem for ver 1.0.0.4 , i hope ;)
 
 Test:
 i tested this tool by my own Encrypted Backdoor "C#" and Metasploit and Powershell Backdoors by SET tool
