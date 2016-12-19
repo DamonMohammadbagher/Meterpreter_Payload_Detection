@@ -19,7 +19,7 @@ Empire not detected Unfortunately ;) maybe fortunately , because emipre native p
 
 -------------------
 version 1.0.0.4
-1.Addming "New Process Event" for Monitoring like Realtime Mode
+1.Adding "New Process Event" for Monitoring like Realtime Mode
 2.you should runAs Administrator this version because Method for Monitoring Realtime Process need to Administrator Privilege 
 
 version 1.0.0.3
