@@ -8,6 +8,7 @@ in the next version i will fix Colors problem for ver 1.0.0.4 , i hope ;)
 
 Note: sometimes this application detect itself like a backdoor , because in Source code this application try to scanning itself too 
 you can fix that in C# Source Code for avoid itself scanning . (not recommended)
+because this application detecting meterpreter signature bytes in itself memory too. (don't worry its ok) ;-)
 
 
 Test:
