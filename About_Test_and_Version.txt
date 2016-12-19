@@ -5,11 +5,16 @@ and finally i want to add Network Monitor for this tool with API ;)
 i have idea about make service for this tool with IPS Mode [on] in future.
 in the next version i will fix Colors problem for ver 1.0.0.4 , i hope ;)
 
+
+Note: sometimes this application detect itself like a backdoor , because in Source code this application try to scanning itself too 
+you can fix that in C# Source Code for avoid itself scanning . (not recommended)
+
+
 Test:
-i tested this tool by my own Encrypted Backdoor "C#" and Metasploit and Powershell Backdoors by SET tool
+I tested this tool by my own Encrypted Backdoor "C#" and Metasploit and Powershell Backdoors by SET tool.
 Armitage not tested , i think you can detect Armitage backdoors with this tool.
-cobaltstrike not tested .
-Empire Not detected Unfortunately ;) maybe fortunately , because emipre native payloads was different with signature in this tool.  
+Cobaltstrike not tested .
+Empire not detected Unfortunately ;) maybe fortunately , because emipre native payloads was different with signature in this tool.  
 
 -------------------
 version 1.0.0.4
