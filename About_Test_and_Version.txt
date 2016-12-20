@@ -1,9 +1,8 @@
 Next versions :
 i want to add functions for making Dump files for Infected process and making text report files
-and this tool need to monitor Realtime for New process and Closed Process too , i will make these functions very soon
-and finally i want to add Network Monitor for this tool with API ;)
+and i want to add Network Monitor for this tool with API ;)
 i have idea about make service for this tool with IPS Mode [on] in future.
-in the next version i will fix Colors problem for ver 1.0.0.4 , i hope ;)
+
 
 
 Note: sometimes this application detect itself like a backdoor , because in Source code this application try to scanning itself too 
@@ -18,6 +17,11 @@ Cobaltstrike not tested .
 Empire not detected Unfortunately ;) maybe fortunately , because emipre native payloads was different with signature in this tool.  
 
 -------------------
+version 1.0.0.5
+1.fixing huge Usage Memory in version (1.0.0.4) by SetProcessWorkingSetSize Method and GC and avoiding exception in threads 
+2.this code is faster than Previous version like (1.0.0.4)
+3.finally all error output colors changed also show them with time
+
 version 1.0.0.4
 1.Adding "New Process Event" for Monitoring like Realtime Mode
 2.you should runAs Administrator this version because Method for Monitoring Realtime Process need to Administrator Privilege 
