@@ -1,0 +1,4 @@
+Meterpreter_Payload_Detection.exe (version 1.0.0.5)
+1.fixing huge Usage Memory in version (1.0.0.4) by SetProcessWorkingSetSize Method and GC and avoiding exception in threads 
+2.this code is faster than Previous version like (1.0.0.4)
+3.finally all error output colors changed also show them with time
