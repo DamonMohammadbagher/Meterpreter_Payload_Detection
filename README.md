@@ -1,5 +1,3 @@
-[![Travis](https://img.shields.io/travis/rust-lang/rust.svg)]()
-
 # Meterpreter_Payload_Detection.exe Tool
 
 C# code Author                : Damon Mohammadbagher
