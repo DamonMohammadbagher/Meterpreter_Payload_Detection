@@ -24,12 +24,17 @@ syntax : Meterpreter_Payload_Detection.exe Blobblob
 
 Video Published by Damon Mohammadbagher (bbxc9x00x1f)
 
+
 Video for Meterpreter_Payload_Detection.exe Tool
+
 Video 1 : https://youtu.be/Ka9c_d3sR_k
 
 Bypassing AVs with NativePayload_DNS and Meterpreter_Payload_Detection
+
 Video 2 : https://youtu.be/ngZl4PSfW6o
+
 Video Description: Bypassing AVs with NativePayload_DNS.exe and Detecting Meterpreter Process by Meterpreter_Payload_Detection tool
+
 
 step by step and for more information Please visit this link:
 
