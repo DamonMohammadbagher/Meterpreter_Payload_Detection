@@ -19,8 +19,11 @@ Note : IPS Mode required RunAs Administrators
 if you getting error , use command with one argument 
 
 syntax : Meterpreter_Payload_Detection.exe IPS
+
 syntax : Meterpreter_Payload_Detection.exe IDS
+
 syntax : Meterpreter_Payload_Detection.exe Blobblob
+
 
 Video Published by Damon Mohammadbagher (bbxc9x00x1f)
 
