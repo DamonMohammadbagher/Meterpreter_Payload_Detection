@@ -490,7 +490,7 @@ namespace ETWMonThread
                                         {                                          
 
                                             /// if Thread_startadrees was 0 maybe that thread is METERPRETER backdoor thread ;-/
-                                            /// so i will show Thread_startadress 0 by Yellow color but this is not 100% currect always ;)
+                                            /// so i will show Thread_startadress 0 by Yellow color but this is not 100% correct always ;)
                                             if (Prcs.Threads[counter_threads].ThreadState == System.Diagnostics.ThreadState.Wait)
                                             {
                                                 if (Prcs.Threads[counter_threads].StartAddress.ToString() == "0" || Prcs.Threads[counter_threads].WaitReason.ToString().Contains("Exe"))
@@ -538,7 +538,7 @@ namespace ETWMonThread
                                                     // Console.WriteLine("----------Tid StartAddress: {0}", _Return_Threads_StartAddress(Prcs.Threads[counter_threads].Id));
                                                 }
                                                 /// if startadrees was 0 maybe that thread is METERPRETER backdoor thread ;-/
-                                                /// so i will show startadress 0 by Yellow color but this is not 100% currect always ;)
+                                                /// so i will show startadress 0 by Yellow color but this is not 100% correct always ;)
                                             }
                                             else
                                             {
@@ -586,7 +586,7 @@ namespace ETWMonThread
                                                     //  Console.WriteLine("----------Tid StartAddress: {0}", _Return_Threads_StartAddress(Prcs.Threads[counter_threads].Id));
                                                 }
                                                 /// if startadrees was 0 maybe that thread is METERPRETER backdoor thread ;-/
-                                                /// so i will show startadress 0 by Yellow color but this is not 100% currect always ;)
+                                                /// so i will show startadress 0 by Yellow color but this is not 100% correct always ;)
                                             }
 
                                         }
