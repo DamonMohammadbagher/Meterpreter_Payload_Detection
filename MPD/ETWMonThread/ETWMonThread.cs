@@ -865,14 +865,14 @@ namespace ETWMonThread
                                 DoSomething(Convert.ToInt32(Injected_Processes_IDsList[Injected_Processes_IDsList.Count - 1].Split(':')[0]), Convert.ToInt32(Injected_Processes_IDsList[Injected_Processes_IDsList.Count - 1].Split(':')[1]));
                                 //Console.ForegroundColor = ConsoleColor.Cyan;
                                 //Console.WriteLine = ("[{0}] Process:Thread {1} Scanned", DateTime.Now.ToString(), Injected_Processes_IDsList[Injected_Processes_IDsList.Count - 1]);
-                                Console.Title = "[ " + DateTime.Now.ToString() + " ] Process:Thread " + Injected_Processes_IDsList[Injected_Processes_IDsList.Count - 1] + " Scanned";
+                                Console.Title = "[ " + DateTime.Now.ToString() + " ] Process:Thread " + Injected_Processes_IDsList[Injected_Processes_IDsList.Count - 1].Split(':')[0] + ":" + Injected_Processes_IDsList[Injected_Processes_IDsList.Count - 1].Split(':')[1] + " Scanned";
                             }
                             else if (!Process.GetProcessById(Convert.ToInt32(Injected_Processes_IDsList[Injected_Processes_IDsList.Count - 2].Split(':')[0])).HasExited)
                             {
                                 DoSomething(Convert.ToInt32(Injected_Processes_IDsList[Injected_Processes_IDsList.Count - 2].Split(':')[0]), Convert.ToInt32(Injected_Processes_IDsList[Injected_Processes_IDsList.Count - 2].Split(':')[1]));
                                 //Console.ForegroundColor = ConsoleColor.Cyan;
                                 //Console.WriteLine = ("[{0}] Process:Thread {1} Scanned", DateTime.Now.ToString(), Injected_Processes_IDsList[Injected_Processes_IDsList.Count - 2]);
-                                Console.Title = "[ " + DateTime.Now.ToString() + " ] Process:Thread " + Injected_Processes_IDsList[Injected_Processes_IDsList.Count - 2] + " Scanned";
+                                Console.Title = "[ " + DateTime.Now.ToString() + " ] Process:Thread " + Injected_Processes_IDsList[Injected_Processes_IDsList.Count - 2].Split(':')[0] + ":" + Injected_Processes_IDsList[Injected_Processes_IDsList.Count - 2].Split(':')[1] + " Scanned";
                             }
                             Console.ForegroundColor = ConsoleColor.Gray;
                         }
