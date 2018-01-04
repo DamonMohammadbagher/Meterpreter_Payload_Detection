@@ -1,6 +1,6 @@
 # ETWMonThread
 
-ETWMonThread.cs C# Source Code is Simple ETW Sample by C# for Detecting Injected Meterpreter Payloads via Thread Injection Method (only)
+ETWMonThread.cs , Simple C# Source Code with ETW Sample for Detecting Injected Meterpreter Payloads via Thread Injection Method (only)
 
 Note: RunAs Admin "Required"
 
