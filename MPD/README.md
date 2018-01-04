@@ -4,6 +4,8 @@ Using ETW for Detecting Meterpreter Processes/Threads by C# (.NET framework 4.5)
 
 ETWMonThread.cs C# Source Code is Simple Sample for Detecting Injected Meterpreter Payloads via Thread Injection Method (only)
 
+Note: RunAs Admin "Required"
+
 I will make Video and Article for this soon .
 
 Help: ETWMonThread , Realtime Scanning/Monitoring Thread Injection for MPD (Meterpreter Payload Detection) by ETW
