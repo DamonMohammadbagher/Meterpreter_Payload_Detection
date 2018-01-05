@@ -742,7 +742,7 @@ namespace ETWMonThread
                 //    if (i >= Injected_Processes_IDsList.Count - 5)
                 //        Console.WriteLine(Injected_Processes_IDsList[i].ToString() + " [" + i.ToString() + "]");
                 //}
-                Thread.Sleep(2500);
+                Thread.Sleep(4000);
                 if (Convert.ToInt32(TPid) != 0 && Convert.ToInt32(TPid) != 4 && (!Process.GetProcessById(Convert.ToInt32(TPid)).HasExited))
                 {
                     try
