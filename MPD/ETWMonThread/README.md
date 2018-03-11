@@ -2,9 +2,11 @@
 
 ETWMonThread.cs , Simple C# Source Code with ETW Sample for Detecting Injected Meterpreter Payloads via Thread Injection Method (only)
 
+Note: for Installing "nupkg" Package File please visit this page : https://www.nuget.org/packages/O365.Security.Native.ETW/
+
 Note: RunAs Admin "Required"
 
-I will make Video and Article for this soon .
+I will make Video and Article for this soon . 
 
 Help: ETWMonThread , Realtime Scanning/Monitoring Thread Injection for MPD (Meterpreter Payload Detection) by ETW
 
