@@ -6,7 +6,7 @@ Note: for Installing "nupkg" Package File Please Visit This Page : https://www.n
 
 Note: RunAs Admin "Required"
 
-Video (Step by step) :  https://www.youtube.com/watch?v=nIoDrqeQ2es
+Video (Step by Step) :  https://www.youtube.com/watch?v=nIoDrqeQ2es
 
 Help: ETWMonThread , Realtime Scanning/Monitoring Thread Injection for MPD (Meterpreter Payload Detection) by ETW
 
