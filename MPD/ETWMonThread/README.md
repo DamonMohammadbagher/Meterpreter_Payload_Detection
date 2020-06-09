@@ -6,6 +6,12 @@ Note: for Installing "nupkg" Package File Please Visit This Page : https://www.n
 
 Note: RunAs Admin "Required"
 
+Note: in this New Article i talked about how an attacker can Bypass this Code Sometimes with Code Chunking Technique.
+
+    New Article: 
+    Detecting Thread Injection by ETW & One Simple Technique [ https://damonmohammadbagher.github.io/Posts/7jun2020x.html ]
+
+
 Video (Step by Step) :  https://www.youtube.com/watch?v=nIoDrqeQ2es
 
 Help: ETWMonThread , Realtime Scanning/Monitoring Thread Injection for MPD (Meterpreter Payload Detection) by ETW
