@@ -48,3 +48,11 @@ Related Links :
 
 Bypass all anti-viruses by Encrypted Payloads with C#
 https://www.linkedin.com/pulse/bypass-all-anti-viruses-encrypted-payloads-c-damon-mohammadbagher?trk=pulse_spock-articles
+
+### ETWMonThread
+Download Link => https://github.com/DamonMohammadbagher/Meterpreter_Payload_Detection/tree/master/MPD/ETWMonThread
+
+![](https://github.com/DamonMohammadbagher/Meterpreter_Payload_Detection/blob/master/MPD/ETWMonThread/ETWMonThread.png)
+
+
+<p><a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https://github.com/DamonMohammadbagher/Meterpreter_Payload_Detection"/></a></p>
