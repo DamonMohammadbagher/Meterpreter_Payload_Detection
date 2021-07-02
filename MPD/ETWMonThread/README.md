@@ -1,6 +1,6 @@
 # ETWMonThread
 
-ETWMonThread.cs , Simple C# Source Code with ETW Sample for Detecting Injected Meterpreter Payloads via Thread Injection Method (only)
+ETWMonThread.cs , Simple C# Source Code with ETW Sample for Detecting Injected Meterpreter Payloads via Thread Injection Method & meterpreter signature was for msf4 & tested on Metasploit ver4 [kali 2018 with metasploit v4.17], "msf6" meterpreter/payloads signature is changed so this code will not work on msf6 ;)  
 
 Note: for Installing "nupkg" Package File Please Visit This Page : https://www.nuget.org/packages/O365.Security.Native.ETW/
 
